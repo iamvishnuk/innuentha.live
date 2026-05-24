@@ -14,8 +14,8 @@
     "components": "@/components",
     "hooks": "@/hooks",
     "lib": "@/lib",
-    "utils": "@workspace/ui/lib/utils",
-    "ui": "@workspace/ui/components"
+    "utils": "@innuentha/ui/lib/utils",
+    "ui": "@innuentha/ui/components"
   },
   "rtl": false,
   "menuColor": "default",
