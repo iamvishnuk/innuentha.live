@@ -8,7 +8,7 @@ export async function updateSession(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -28,6 +28,15 @@ export async function updateSession(request: NextRequest) {
       }
     }
   );
+
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+
+  if (user && request.nextUrl.pathname.startsWith('/login')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    return NextResponse.redirect(url);
+  }
 
   // IMPORTANT: Do NOT use getSession() here.
   // getUser() sends a request to the Supabase Auth server to revalidate the

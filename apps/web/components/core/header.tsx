@@ -45,15 +45,15 @@ const Header = () => {
           <div className='flex flex-col select-none'>
             <div className='font-caveat-brush text-3xl font-bold md:text-5xl'>
               <span className='text-green-700'>innu</span>
-              <span className='text-orange-700'>entha</span>
+              <span className='text-orange-500'>entha</span>
               <span className='text-base text-green-700 md:text-xl'>.live</span>
             </div>
             <div className='flex w-full items-center gap-1'>
-              <span className='h-px w-full bg-orange-700' />
+              <span className='h-px w-full bg-orange-500' />
               <span className='font-inter text-[10px] font-medium text-nowrap text-green-700 md:text-xs'>
                 KERALA LIVE EVENTS MAP
               </span>
-              <span className='h-px w-full bg-orange-700' />
+              <span className='h-px w-full bg-orange-500' />
             </div>
           </div>
         </Link>
@@ -68,8 +68,8 @@ const Header = () => {
                   className={cn(
                     'transition-colors duration-300',
                     pathname === item.href
-                      ? 'text-orange-700'
-                      : 'text-green-700 hover:text-orange-700'
+                      ? 'text-orange-500'
+                      : 'text-green-700 hover:text-orange-500'
                   )}
                 >
                   {item.name}
@@ -137,8 +137,8 @@ const Header = () => {
                   className={cn(
                     'block py-1 transition-colors duration-300',
                     pathname === item.href
-                      ? 'text-orange-700'
-                      : 'text-green-700 hover:text-orange-700'
+                      ? 'text-orange-500'
+                      : 'text-green-700 hover:text-orange-500 dark:text-white'
                   )}
                 >
                   {item.name}
