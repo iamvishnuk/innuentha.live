@@ -1,0 +1,33 @@
+{
+  "name": "@innuentha/supabase",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.49.8",
+    "drizzle-orm": "^0.44.2",
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@innuentha/typescript-config": "workspace:*",
+    "@types/node": "^25.2.3",
+    "drizzle-kit": "^0.31.4",
+    "next": "16.2.6",
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./middleware": "./src/middleware.ts",
+    "./db": "./src/db/index.ts",
+    "./schema": "./src/db/schema.ts"
+  }
+}

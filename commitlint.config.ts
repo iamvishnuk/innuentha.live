@@ -10,6 +10,7 @@ const config: UserConfig = {
         'web',
         'server',
         'ui',
+        'supabase',
         'types',
         'eslint-config',
         'typescript-config',
