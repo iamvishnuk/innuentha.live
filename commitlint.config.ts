@@ -8,7 +8,7 @@ const config: UserConfig = {
       'always',
       [
         'web',
-        'server',
+        'api',
         'ui',
         'supabase',
         'types',
