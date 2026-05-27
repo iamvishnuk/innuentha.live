@@ -2,11 +2,19 @@
   "extends": "@innuentha/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "declaration": false,
     "declarationMap": false,
     "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@innuentha/supabase/client": ["../../packages/supabase/src/client.ts"],
+      "@innuentha/supabase/server": ["../../packages/supabase/src/server.ts"],
+      "@innuentha/supabase/middleware": [
+        "../../packages/supabase/src/middleware.ts"
+      ],
+      "@innuentha/supabase/db": ["../../packages/supabase/src/db/index.ts"],
+      "@innuentha/supabase/schema": ["../../packages/supabase/src/db/schema.ts"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -20,8 +20,8 @@ const navItems = [
     href: '/add-events'
   },
   {
-    name: 'Contact',
-    href: '/contact'
+    name: 'Profile',
+    href: '/profile'
   }
 ];
 
@@ -35,8 +35,8 @@ const Header = () => {
   }, [pathname]);
 
   return (
-    <header className='relative'>
-      <div className='flex items-center justify-between px-6 py-3 md:px-10'>
+    <header className='absolute top-0 z-50 w-full border-b border-neutral-200/40 bg-white/10 backdrop-blur-sm dark:border-neutral-800/40 dark:bg-[#0B0F0C]/70'>
+      <div className='relative flex items-center justify-between px-6 py-3 md:px-10'>
         <Link
           href='/'
           className='flex items-center justify-center gap-3 md:gap-5'

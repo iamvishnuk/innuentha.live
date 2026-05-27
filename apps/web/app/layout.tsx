@@ -54,6 +54,8 @@ export const metadata: Metadata = {
   }
 };
 
+import { Providers } from '@/components/providers';
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -73,10 +75,12 @@ export default function RootLayout({
         caveatBrush.variable
       )}
     >
-      <body className='min-h-dvh w-full bg-white dark:bg-gradient-to-b dark:from-[#0B0F0C] dark:via-[#101512] dark:to-[#0A0A0A]'>
+      <body className='relative min-h-dvh w-full bg-white dark:bg-gradient-to-b dark:from-[#0B0F0C] dark:via-[#101512] dark:to-[#0A0A0A]'>
         <ThemeProvider>
-          <Header />
-          {children}
+          <Providers>
+            <Header />
+            {children}
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

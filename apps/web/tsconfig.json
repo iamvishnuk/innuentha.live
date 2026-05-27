@@ -4,7 +4,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@innuentha/ui/*": ["../../packages/ui/src/*"]
+      "@innuentha/ui/*": ["../../packages/ui/src/*"],
+      "@innuentha/map/kerala-map": [
+        "../../packages/map/src/components/kerala-map.tsx"
+      ],
+      "@innuentha/map/map-picker": [
+        "../../packages/map/src/components/map-picker.tsx"
+      ]
     },
     "plugins": [
       {
