@@ -2,142 +2,50 @@
 
 import { createClient } from '@innuentha/supabase/client';
 
-const EVENT_TAGS = [
-  {
-    label: '🎪 Poorams',
-    color:
-      'text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800/40 bg-orange-50 dark:bg-orange-950/20'
-  },
-  {
-    label: '⛪ Perunnals',
-    color:
-      'text-green-600 dark:text-green-400 border-green-200 dark:border-green-800/40 bg-green-50 dark:bg-green-950/20'
-  },
-  {
-    label: '🎓 College Fests',
-    color:
-      'text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800/40 bg-blue-50 dark:bg-blue-950/20'
-  },
-  {
-    label: '🍜 Food Festivals',
-    color:
-      'text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-950/20'
-  },
-  {
-    label: '🎧 DJ Events',
-    color:
-      'text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800/40 bg-purple-50 dark:bg-purple-950/20'
-  }
-];
-
 const LoginPage = () => {
   const handleGoogleLogin = async () => {
     const supabase = createClient();
 
+    let redirectTo = `${window.location.origin}/auth/callback`;
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const next = searchParams.get('next');
+      if (next) {
+        redirectTo += `?next=${encodeURIComponent(next)}`;
+      }
+    }
+
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo,
         skipBrowserRedirect: false
       }
     });
   };
 
   return (
-    <div className='relative flex min-h-[calc(100dvh-140px)] w-full overflow-hidden'>
+    <div className='relative flex min-h-screen w-full justify-center pt-16 md:pt-35'>
       {/* Decorative background elements */}
       <div className='pointer-events-none absolute inset-0 overflow-hidden'>
         <div className='absolute -top-32 -left-32 size-96 rounded-full bg-green-500/5 blur-3xl dark:bg-green-500/10' />
         <div className='absolute -right-32 bottom-0 size-96 rounded-full bg-orange-500/5 blur-3xl dark:bg-orange-500/10' />
       </div>
 
-      {/* LEFT SIDE — Hero content */}
-      <div className='relative hidden flex-shrink-0 lg:flex lg:w-1/2'>
-        {/* Gradient overlay for left side */}
-        <div className='absolute inset-0 bg-gradient-to-br from-green-50/80 via-transparent to-orange-50/50 dark:from-green-950/30 dark:via-transparent dark:to-orange-950/20' />
-
-        <div className='relative z-10 flex max-w-xl flex-col justify-center px-16 py-16 xl:px-24'>
-          <div className='space-y-8'>
-            {/* Status badge */}
-            <div className='inline-flex w-fit items-center gap-2 rounded-full border border-green-200 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-md dark:border-green-800/40 dark:bg-green-950/30'>
-              <span className='relative flex size-2'>
-                <span className='absolute inline-flex size-full animate-ping rounded-full bg-green-500 opacity-75' />
-                <span className='relative inline-flex size-2 rounded-full bg-green-500' />
-              </span>
-              <span className='font-inter text-sm font-medium text-green-700 dark:text-green-400'>
-                Live events happening now
-              </span>
-            </div>
-
-            {/* Main heading */}
-            <div className='space-y-4'>
-              <h1 className='font-caveat-brush text-7xl leading-none text-green-600 dark:text-green-500'>
-                ഇന്ന് എന്താ?
-              </h1>
-              <p className='max-w-md font-inter text-lg leading-relaxed text-neutral-600 dark:text-neutral-300'>
-                Discover poorams, perunnals, temple festivals, college fests,
-                food festivals, DJ nights, and cultural events happening near
-                you — in real time.
-              </p>
-            </div>
-
-            {/* Event category tags */}
-            <div className='flex flex-wrap gap-2 pt-2'>
-              {EVENT_TAGS.map((tag) => (
-                <span
-                  key={tag.label}
-                  className={`rounded-full border px-4 py-1.5 font-inter text-sm font-medium ${tag.color}`}
-                >
-                  {tag.label}
-                </span>
-              ))}
-            </div>
-
-            {/* Social proof */}
-            <div className='flex items-center gap-3 pt-4'>
-              <div className='flex -space-x-2'>
-                {[
-                  'bg-green-500',
-                  'bg-orange-500',
-                  'bg-blue-500',
-                  'bg-purple-500'
-                ].map((bg, i) => (
-                  <div
-                    key={i}
-                    className={`flex size-8 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white dark:border-[#0B0F0C] ${bg}`}
-                  >
-                    {['V', 'A', 'R', 'S'][i]}
-                  </div>
-                ))}
-              </div>
-              <p className='font-inter text-sm text-neutral-500 dark:text-neutral-400'>
-                <span className='font-semibold text-green-700 dark:text-green-400'>
-                  100+
-                </span>{' '}
-                Keralites already exploring events
-              </p>
-            </div>
-          </div>
+      <div className='relative flex flex-col items-center px-6 py-10 lg:px-10'>
+        <div className='mb-8 space-y-7 text-center'>
+          <h1 className='font-caveat-brush text-5xl font-bold text-green-700 md:text-7xl dark:text-green-500'>
+            ഇന്ന് എന്താ?
+          </h1>
+          <p className='max-w-md font-inter text-lg leading-relaxed text-neutral-600 md:max-w-xl dark:text-neutral-300'>
+            Discover poorams, perunnals, temple festivals, college fests, food
+            festivals, DJ nights, and cultural events happening near you — in
+            real time.
+          </p>
         </div>
 
-        {/* Vertical divider */}
-        <div className='absolute top-[10%] right-0 h-[80%] w-px bg-gradient-to-b from-transparent via-orange-300/30 to-transparent dark:via-orange-700/20' />
-      </div>
-
-      {/* RIGHT SIDE — Login card */}
-      <div className='relative flex w-full flex-shrink-0 items-center justify-center px-6 py-10 lg:w-1/2 lg:px-10'>
-        <div className='w-full max-w-md'>
-          {/* Mobile-only hero text */}
-          <div className='mb-8 space-y-3 text-center lg:hidden'>
-            <h1 className='font-caveat-brush text-5xl text-green-600 dark:text-green-500'>
-              ഇന്ന് എന്താ?
-            </h1>
-            <p className='font-inter text-sm text-neutral-600 dark:text-neutral-400'>
-              Discover live events happening across Kerala
-            </p>
-          </div>
-
-          {/* Card */}
+        {/* Card */}
+        <div className='max-w-md'>
           <div className='rounded-3xl border border-neutral-200/60 bg-white/80 p-8 shadow-xl shadow-green-900/5 backdrop-blur-xl sm:p-10 dark:border-[#1F2A24]/60 dark:bg-[#111714]/80 dark:shadow-black/20'>
             <div className='space-y-8'>
               {/* Heading */}

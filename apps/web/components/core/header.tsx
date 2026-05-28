@@ -5,6 +5,7 @@ import { cn } from '@innuentha/ui/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { AddEventDialog } from '@/components/core/add-event-dialog';
 
 const navItems = [
   {
@@ -14,14 +15,6 @@ const navItems = [
   {
     name: 'Events',
     href: '/events'
-  },
-  {
-    name: 'Add Events',
-    href: '/add-events'
-  },
-  {
-    name: 'Profile',
-    href: '/profile'
   }
 ];
 
@@ -61,7 +54,7 @@ const Header = () => {
         {/* Desktop nav */}
         <nav className='hidden md:block'>
           <ul className='flex items-center gap-5 font-caveat-brush text-2xl font-semibold'>
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <li key={item.name}>
                 <Link
                   href={item.href}
@@ -76,6 +69,13 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            <li key='Add Events'>
+              <AddEventDialog>
+                <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+                  Add Events
+                </button>
+              </AddEventDialog>
+            </li>
           </ul>
         </nav>
 
@@ -125,26 +125,33 @@ const Header = () => {
       <div
         className={cn(
           'absolute inset-x-0 top-full z-50 overflow-hidden bg-white transition-all duration-300 ease-in-out md:hidden dark:bg-[#0B0F0C]',
-          mobileMenuOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+          mobileMenuOpen ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
         <nav className='border-t border-orange-700/20 px-6 pt-2 pb-4'>
-          <ul className='flex flex-col gap-3 font-caveat-brush text-2xl font-semibold'>
-            {navItems.map((item) => (
+          <ul className='flex flex-col gap-5 font-caveat-brush text-2xl font-semibold'>
+            {navItems.map((item, index) => (
               <li key={item.name}>
                 <Link
                   href={item.href}
                   className={cn(
-                    'block py-1 transition-colors duration-300',
+                    'transition-colors duration-300',
                     pathname === item.href
                       ? 'text-orange-500'
-                      : 'text-green-700 hover:text-orange-500 dark:text-white'
+                      : 'text-green-700 hover:text-orange-500'
                   )}
                 >
                   {item.name}
                 </Link>
               </li>
             ))}
+            <li key='Add Events'>
+              <AddEventDialog>
+                <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+                  Add Events
+                </button>
+              </AddEventDialog>
+            </li>
           </ul>
         </nav>
       </div>
