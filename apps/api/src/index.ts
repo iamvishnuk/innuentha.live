@@ -1,5 +1,7 @@
-import app from "./app";
+// env MUST be imported first — it calls dotenv.config() which populates
+// process.env before any other module (e.g. db/index.ts) reads it at load time.
 import { env } from "./config/env";
+import app from "./app";
 import { logger } from "./utils/logger";
 import { db } from "@innuentha/supabase/db";
 

@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@innuentha/ui/lib/utils';
 import { Metadata } from 'next';
 import Header from '@/components/core/header';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -80,6 +81,10 @@ export default function RootLayout({
           <Providers>
             <Header />
             {children}
+            <Toaster
+              richColors
+              position='top-right'
+            />
           </Providers>
         </ThemeProvider>
       </body>

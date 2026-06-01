@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
+import { env } from '../config/env';
 
 // Initialize a standalone Supabase client for JWT verification
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  env.SUPABASE_URL!,
+  env.SUPABASE_PUBLISHABLE_KEY!
 );
 
 // Extend Express Request type to include user information

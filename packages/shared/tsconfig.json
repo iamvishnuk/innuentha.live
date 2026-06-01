@@ -1,0 +1,7 @@
+{
+  "extends": "@innuentha/typescript-config/base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  }
+}
