@@ -5,3 +5,7 @@ export const addEventMutationFn = async (data: FormData) => {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
 };
+
+export const getEventsQueryFn = async () => {
+  return api.get('/events?status=all');
+};

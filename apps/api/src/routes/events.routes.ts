@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import { z } from 'zod';
+import { and, asc, eq } from 'drizzle-orm';
 import { db } from '@innuentha/supabase/db';
 import { events } from '@innuentha/supabase/schema';
 import { optionalAuth } from '../middlewares/auth.middleware.js';
@@ -103,4 +104,58 @@ router.post(
   }
 );
 
+/**
+ * GET /api/events
+ * Fetch all events with optional filters.
+ * Reconstructs the full poster URL from the stored key on the fly.
+ */
+router.get(
+  '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { status, category, district } = req.query;
+
+      // Build dynamic where clause using SQL or drizzle expressions
+      // Default to returning 'approved' events unless specifically asked for 'all' or another status
+      let query = db.select().from(events);
+
+      const conditions = [];
+
+      if (status !== 'all') {
+        const statusValue = typeof status === 'string' ? status : 'approved';
+        conditions.push(eq(events.status, statusValue));
+      }
+
+      if (typeof category === 'string' && category.trim() !== '') {
+        conditions.push(eq(events.category, category));
+      }
+
+      if (typeof district === 'string' && district.trim() !== '') {
+        conditions.push(eq(events.district, district));
+      }
+
+      // If we have query filters, apply them
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions)) as typeof query;
+      }
+
+      // Order by starting date ascending (soonest first)
+      const results = await query.orderBy(asc(events.startDate));
+
+      // Enrich poster keys into full public CDN URLs
+      const enrichedEvents = results.map(event => ({
+        ...event,
+        posterUrl: getPosterUrl(event.posterUrl)
+      }));
+
+      res.status(200).json({
+        events: enrichedEvents
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 export const eventsRoutes = router;
+

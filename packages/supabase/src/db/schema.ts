@@ -26,6 +26,7 @@ export const profiles = pgTable('profiles', {
     .defaultNow()
     .notNull()
 });
+export type TProfile = typeof profiles.$inferSelect;
 
 /**
  * Events — stores all fields submitted through the Add Event form.
@@ -59,6 +60,7 @@ export const events = pgTable('events', {
     .defaultNow()
     .notNull()
 });
+export type TEvent = typeof events.$inferSelect;
 
 /**
  * Event Locations cache — stores places that users have selected via the map
@@ -82,3 +84,4 @@ export const eventLocations = pgTable('event_locations', {
     .defaultNow()
     .notNull()
 });
+export type TEventLocation = typeof eventLocations.$inferSelect;

@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@innuentha/shared": "workspace:*",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.16.0",
     "react": "^19.2.4",
