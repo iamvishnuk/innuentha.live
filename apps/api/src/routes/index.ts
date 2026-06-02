@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { healthRoutes } from "./health.routes.js";
-import { eventsRoutes } from "./events.routes.js";
-import { locationsRoutes } from "./locations.routes.js";
+import { healthRoutes } from "./health.routes";
+import { eventsRoutes } from "../events/events.routes";
+import { locationsRoutes } from "./locations.routes";
 
 const router = Router();
 

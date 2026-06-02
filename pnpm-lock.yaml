@@ -50,6 +50,9 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.1057.0
         version: 3.1057.0
+      '@innuentha/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@innuentha/supabase':
         specifier: workspace:*
         version: link:../../packages/supabase
@@ -81,8 +84,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       zod:
-        specifier: ^3.24.2
-        version: 3.25.76
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@innuentha/eslint-config':
         specifier: workspace:*
@@ -9564,8 +9567,8 @@ snapshots:
       '@babel/parser': 7.29.0
       eslint: 9.39.2(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 4.0.2(zod@3.25.76)
+      zod: 4.4.3
+      zod-validation-error: 4.0.2(zod@4.4.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -12202,9 +12205,9 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@4.0.2(zod@3.25.76):
+  zod-validation-error@4.0.2(zod@4.4.3):
     dependencies:
-      zod: 3.25.76
+      zod: 4.4.3
 
   zod@3.25.76: {}
 

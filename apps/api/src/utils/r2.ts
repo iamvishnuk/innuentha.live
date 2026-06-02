@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { env } from '../config/env.js';
+import { env } from '../config/env';
 import { randomUUID } from 'crypto';
 import path from 'path';
 
