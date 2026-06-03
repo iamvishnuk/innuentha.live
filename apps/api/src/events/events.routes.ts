@@ -2,7 +2,11 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import { optionalAuth } from '../middlewares/auth.middleware';
 import { upload } from './events.upload';
-import { createEventHandler, getEventsHandler } from './events.controller';
+import {
+  createEventHandler,
+  getEventsHandler,
+  getUserEventsHandler
+} from './events.controller';
 
 const router = Router();
 
@@ -14,15 +18,21 @@ const router = Router();
 const submitRateLimit = rateLimit({
   windowMs: 60 * 60 * 1000, // 1-hour window
   max: 5,
-  standardHeaders: true,  // Return RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
   message: {
     error: 'Too many event submissions from this IP. Please try again later.'
   }
 });
 
-router.post('/', submitRateLimit, optionalAuth, upload.single('poster'), createEventHandler);
+router.post(
+  '/',
+  submitRateLimit,
+  optionalAuth,
+  upload.single('poster'),
+  createEventHandler
+);
+router.get('/my-submissions', optionalAuth, getUserEventsHandler);
 router.get('/', getEventsHandler);
 
 export const eventsRoutes = router;
-

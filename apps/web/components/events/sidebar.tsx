@@ -11,6 +11,8 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
+import EventCardLoader from '@/loaders/event-card-loader';
+import { cn } from '@innuentha/ui/lib/utils';
 
 type SidebarProps = {
   isSidebarOpen: boolean;
@@ -117,17 +119,7 @@ const Sidebar = ({
         {isLoading ? (
           // Skeleton Loaders
           Array.from({ length: 3 }).map((_, idx) => (
-            <div
-              key={idx}
-              className='flex animate-pulse items-center gap-3 rounded-2xl border border-neutral-200/30 bg-neutral-100/30 p-3 dark:border-neutral-800/30 dark:bg-neutral-900/30'
-            >
-              <div className='size-14 rounded-xl bg-neutral-200 dark:bg-neutral-800' />
-              <div className='flex-1 space-y-2 py-0.5'>
-                <div className='h-3 w-3/4 rounded bg-neutral-200 dark:bg-neutral-800' />
-                <div className='h-2.5 w-1/2 rounded bg-neutral-200 dark:bg-neutral-800' />
-                <div className='h-2 w-1/3 rounded bg-neutral-200 dark:bg-neutral-800' />
-              </div>
-            </div>
+            <EventCardLoader key={idx} />
           ))
         ) : events.length === 0 ? (
           <div className='flex flex-col items-center justify-center px-4 py-10 text-center'>
@@ -166,7 +158,11 @@ const Sidebar = ({
                 <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
                   <div className='flex items-center justify-between gap-1'>
                     <span
-                      className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase ${catStyle.bg} ${catStyle.text} font-inter`}
+                      className={cn(
+                        'rounded-md px-1.5 py-0.5 font-inter text-[9px] font-bold tracking-wider uppercase',
+                        catStyle.bg,
+                        catStyle.text
+                      )}
                     >
                       {catStyle.label}
                     </span>

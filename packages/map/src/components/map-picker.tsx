@@ -584,10 +584,6 @@ export default function MapPicker({
           </div>
         )}
       </div>
-
-      <div className='pointer-events-none absolute bottom-3 left-3 z-30 rounded-xl bg-white/90 px-3 py-1.5 text-[10px] font-semibold text-neutral-600 shadow-md backdrop-blur-md dark:bg-black/90 dark:text-neutral-300'>
-        🖱️ Click on the map or drag the pin to select location
-      </div>
     </div>
   );
 }

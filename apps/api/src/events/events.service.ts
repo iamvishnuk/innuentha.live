@@ -62,3 +62,17 @@ export async function getEvents(filters: GetEventsFilter) {
 
   return results.map(e => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
 }
+
+/**
+ * Fetches events submitted by a specific user.
+ * Returns all events, including pending and rejected events, for dashboard display.
+ */
+export async function getUserEvents(userId: string) {
+  const results = await db
+    .select()
+    .from(events)
+    .where(eq(events.userId, userId))
+    .orderBy(asc(events.startDate));
+
+  return results.map(e => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
+}
