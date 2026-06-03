@@ -12,6 +12,7 @@ import EventDetailDialog from '@/components/events/event-detail-dialog';
 import SidebarToggle from '@/components/events/sidebar-toggle';
 import Sidebar from '@/components/events/sidebar';
 import { CATEGORY_DETAILS, CategoryStyle } from '@innuentha/shared';
+import { useUserLocation } from '@/hooks/use-user-location';
 
 const KeralaMap = dynamic(() => import('@innuentha/map/kerala-map'), {
   ssr: false,
@@ -19,6 +20,8 @@ const KeralaMap = dynamic(() => import('@innuentha/map/kerala-map'), {
 });
 
 export default function Page() {
+  const userLocation = useUserLocation();
+
   const { data, isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: getEventsQueryFn
@@ -87,6 +90,7 @@ export default function Page() {
         events={filteredEvents}
         onSelectEvent={setSelectedEvent}
         selectedEventId={flyToEventId}
+        userLocation={userLocation}
       />
 
       {/* Floating Toggle Sidebar Button (When Sidebar is Closed) */}

@@ -12,6 +12,7 @@ export interface KeralaMapProps {
   events?: any[];
   onSelectEvent?: (event: any) => void;
   selectedEventId?: string | null;
+  userLocation?: { lat: number; lng: number } | null;
 }
 
 function formatDateRange(startStr: string, endStr: string) {
@@ -41,12 +42,15 @@ function formatDateRange(startStr: string, endStr: string) {
 export default function KeralaMap({
   events,
   onSelectEvent,
-  selectedEventId
+  selectedEventId,
+  userLocation
 }: KeralaMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersGroupRef = useRef<L.LayerGroup | null>(null);
   const markersMapRef = useRef<Record<string, L.Marker>>({});
+
+  const initialLocationRef = useRef(userLocation);
 
   // Initialize Map
   useEffect(() => {
@@ -68,9 +72,14 @@ export default function KeralaMap({
       ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 
+    const initialCenter = userLocation
+      ? ([userLocation.lat, userLocation.lng] as [number, number])
+      : KERALA_CENTER;
+    const initialZoom = userLocation ? 11 : DEFAULT_ZOOM;
+
     const map = L.map(mapContainerRef.current, {
       zoomControl: false
-    }).setView(KERALA_CENTER, DEFAULT_ZOOM);
+    }).setView(initialCenter, initialZoom);
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -216,6 +225,19 @@ export default function KeralaMap({
       markersMapRef.current[id] = marker;
     });
   }, [events]);
+
+  // Handle userLocation dynamic changes (e.g. user grants permission after map loads)
+  useEffect(() => {
+    if (!mapRef.current || !userLocation) return;
+    if (initialLocationRef.current) {
+      initialLocationRef.current = null;
+      return;
+    }
+    mapRef.current.flyTo([userLocation.lat, userLocation.lng], 11, {
+      animate: true,
+      duration: 1.5
+    });
+  }, [userLocation]);
 
   // Handle selectedEventId flyTo and popup opening
   useEffect(() => {
