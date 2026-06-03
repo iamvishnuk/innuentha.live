@@ -5,6 +5,7 @@ import compression from "compression";
 import morgan from "morgan";
 import { apiRouter } from "./routes/index";
 import { errorHandler } from "./middlewares/error.middleware";
+import { env } from "./config/env";
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(helmet());
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: env.CORS_ORIGIN,
     credentials: true,
   })
 );
@@ -28,9 +29,9 @@ if (process.env.NODE_ENV !== "test") {
 // Gzip compression
 app.use(compression());
 
-// Body Parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Body Parsers — 50 kb limit prevents oversized payload attacks
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
 // Centralized Router mounted at /api
 app.use("/api", apiRouter);

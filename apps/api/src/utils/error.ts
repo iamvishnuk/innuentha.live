@@ -1,4 +1,3 @@
-import { Http2ServerRequest } from 'http2';
 import { HTTPSTATUS } from '../config/http';
 
 export class AppError extends Error {

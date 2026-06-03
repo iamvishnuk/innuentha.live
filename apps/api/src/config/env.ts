@@ -17,6 +17,8 @@ const envSchema = z.object({
   CLOUDFLARE_R2_SECRET_ACCESS_KEY: z.string(),
   CLOUDFLARE_R2_BUCKET_NAME: z.string(),
   CLOUDFLARE_R2_PUBLIC_URL: z.string().url(),
+  // Error tracking — optional, Sentry is skipped if not set
+  SENTRY_DSN: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

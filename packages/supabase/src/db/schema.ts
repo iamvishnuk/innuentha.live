@@ -53,6 +53,7 @@ export const events = pgTable('events', {
     onDelete: 'set null'
   }), // Nullable — anonymous submissions allowed
   status: text('status').default('pending').notNull(), // 'pending' | 'approved' | 'rejected'
+  rejectionReason: text('rejection_reason'), // set by the worker when status = 'rejected'
   createdAt: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),

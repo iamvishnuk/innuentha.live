@@ -45,10 +45,9 @@ export default function Page() {
     return (data as any)?.data?.events || [];
   }, [data]);
 
-  // Keep only pending-review events visible on the interactive map
-  // TODO: change the status to 'approved' later
+  // Show only approved events on the interactive map
   const approvedEvents = useMemo(() => {
-    return rawEventsList.filter((e: TEvent) => e.status === 'pending');
+    return rawEventsList.filter((e: TEvent) => e.status === 'approved');
   }, [rawEventsList]);
 
   // Filter events based on search query and category filters
