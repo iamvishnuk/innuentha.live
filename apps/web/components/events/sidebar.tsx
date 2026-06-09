@@ -51,7 +51,7 @@ const Sidebar = ({
           <div className='flex size-7 items-center justify-center rounded-lg bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400'>
             <Sparkles className='size-3.5 animate-pulse' />
           </div>
-          <h2 className='font-caveat-brush text-2xl font-bold tracking-wide text-green-700 dark:text-green-400'>
+          <h2 className='font-caveat-brush text-2xl font-bold tracking-wide text-green-700'>
             Discover Events
           </h2>
         </div>

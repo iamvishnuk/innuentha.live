@@ -30,12 +30,7 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 768;
-    }
-    return false;
-  });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [flyToEventId, setFlyToEventId] = useState<string | null>(null);
 
   const selectedCatStyle = useMemo<CategoryStyle>(() => {
@@ -66,6 +61,10 @@ export default function Page() {
       return matchesCategory && matchesSearch;
     });
   }, [approvedEvents, selectedCategory, searchQuery]);
+
+  useEffect(() => {
+    setIsSidebarOpen(window.innerWidth >= 768);
+  }, []);
 
   // Clean up flyTo state after triggering
   useEffect(() => {

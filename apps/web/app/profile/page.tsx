@@ -119,7 +119,7 @@ export default function ProfilePage() {
         );
       case 'rejected':
         return (
-          <span className='text-red-650 inline-flex items-center gap-1 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold dark:bg-red-500/20 dark:text-red-400'>
+          <span className='inline-flex items-center gap-1 rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-600 dark:bg-red-500/20 dark:text-red-400'>
             <XCircle className='size-3.5' /> Rejected
           </span>
         );
@@ -149,19 +149,13 @@ export default function ProfilePage() {
 
   return (
     <div className='relative min-h-screen w-full bg-white px-6 py-10 pt-22 md:pt-40 lg:px-16 dark:bg-gradient-to-b dark:from-[#0B0F0C] dark:via-[#101512] dark:to-[#0A0A0A]'>
-      {/* Decorative background elements */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-32 -left-32 size-96 rounded-full bg-green-500/5 blur-3xl dark:bg-green-500/10' />
-        <div className='absolute -right-32 bottom-0 size-96 rounded-full bg-orange-500/5 blur-3xl dark:bg-orange-500/10' />
-      </div>
-
       <div className='relative mx-auto max-w-7xl space-y-8'>
         {/* Title */}
         <div className='space-y-2 text-center md:text-left'>
-          <h1 className='text-green-750 font-caveat-brush text-4xl font-bold md:text-6xl dark:text-green-500'>
+          <h1 className='font-caveat-brush text-4xl font-bold text-neutral-800 md:text-5xl dark:text-neutral-200'>
             My Dashboard
           </h1>
-          <p className='font-inter text-sm text-neutral-500 dark:text-neutral-400'>
+          <p className='font-inter text-sm text-neutral-600 dark:text-neutral-300'>
             Manage your account profiles and track your event submissions.
           </p>
         </div>
@@ -248,7 +242,7 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <hr className='dark:border-neutral-850 w-full border-neutral-100' />
+                <hr className='w-full border-neutral-100 dark:border-neutral-800' />
 
                 {/* Email details (Read-only) */}
                 <div className='w-full space-y-2.5 text-left'>
@@ -282,13 +276,13 @@ export default function ProfilePage() {
 
             {/* EVENT SUBMISSIONS */}
             <div className='space-y-6 lg:col-span-2'>
-              <div className='dark:border-neutral-850 flex items-center justify-between border-b border-neutral-100 pb-3'>
-                <h3 className='text-neutral-850 font-caveat-brush text-2xl font-bold md:text-3xl dark:text-neutral-100'>
+              <div className='flex items-center justify-between border-b border-neutral-100 pb-3 dark:border-neutral-800'>
+                <h3 className='font-caveat-brush text-2xl font-bold text-neutral-800 md:text-3xl dark:text-neutral-200'>
                   My Submissions ({submissions?.length || 0})
                 </h3>
                 <Link
                   href='/add-events'
-                  className='bg-green-750 flex items-center gap-1.5 rounded-full px-4 py-2 font-inter text-xs font-bold text-white transition-colors hover:bg-green-800'
+                  className='flex items-center gap-1.5 rounded-full bg-green-700 px-4 py-3 font-inter text-xs font-bold text-white transition-colors duration-300 hover:bg-orange-600'
                 >
                   <PlusCircle className='size-4' /> New Event
                 </Link>
@@ -344,7 +338,7 @@ export default function ProfilePage() {
                               {event.category}
                             </span>
                           </div>
-                          <h4 className='text-neutral-850 font-inter text-base font-bold transition-colors group-hover:text-green-700 dark:text-neutral-100 dark:group-hover:text-green-400'>
+                          <h4 className='font-inter text-base font-bold text-neutral-800 transition-colors group-hover:text-green-700 dark:text-neutral-100 dark:group-hover:text-green-400'>
                             {event.eventName}
                           </h4>
                           <div className='flex flex-wrap gap-x-4 gap-y-1 font-inter text-xs text-neutral-500 dark:text-neutral-400'>

@@ -26,18 +26,12 @@ const LoginPage = () => {
 
   return (
     <div className='relative flex min-h-screen w-full justify-center pt-16 md:pt-35'>
-      {/* Decorative background elements */}
-      <div className='pointer-events-none absolute inset-0 overflow-hidden'>
-        <div className='absolute -top-32 -left-32 size-96 rounded-full bg-green-500/5 blur-3xl dark:bg-green-500/10' />
-        <div className='absolute -right-32 bottom-0 size-96 rounded-full bg-orange-500/5 blur-3xl dark:bg-orange-500/10' />
-      </div>
-
       <div className='relative flex flex-col items-center px-6 py-10 lg:px-10'>
         <div className='mb-8 space-y-7 text-center'>
-          <h1 className='font-caveat-brush text-5xl font-bold text-green-700 md:text-7xl dark:text-green-500'>
+          <h1 className='font-caveat-brush text-5xl font-bold text-green-800 md:text-7xl dark:text-green-700'>
             ഇന്ന് എന്താ?
           </h1>
-          <p className='max-w-md font-inter text-lg leading-relaxed text-neutral-600 md:max-w-xl dark:text-neutral-300'>
+          <p className='max-w-md font-inter text-lg leading-relaxed text-neutral-600 md:max-w-xl dark:text-neutral-400'>
             Discover poorams, perunnals, temple festivals, college fests, food
             festivals, DJ nights, and cultural events happening near you — in
             real time.

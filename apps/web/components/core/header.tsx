@@ -8,17 +8,13 @@ import { useEffect, useState } from 'react';
 import { AddEventDialog } from '@/components/core/add-event-dialog';
 import { createClient } from '@innuentha/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { User as UserIcon, LogOut, Calendar, ChevronDown } from 'lucide-react';
+import { User as UserIcon, LogOut, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 const navItems = [
   {
     name: 'About',
     href: '/about'
-  },
-  {
-    name: 'Events',
-    href: '/events'
   }
 ];
 
@@ -138,7 +134,7 @@ const Header = () => {
                 <button
                   type='button'
                   onClick={() => setProfileDropdownOpen((prev) => !prev)}
-                  className='flex cursor-pointer items-center gap-2 rounded-full border border-neutral-200/60 bg-white/80 p-1 pr-3 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-98 dark:border-[#1F2A24]/60 dark:bg-[#111714]/80'
+                  className='group flex cursor-pointer items-center gap-2 rounded-full border-2 border-green-700/20 bg-green-500/5 px-2 py-1.5 transition-all duration-300 hover:border-green-700/40 hover:bg-green-500/10 active:scale-95'
                 >
                   {user.user_metadata?.avatar_url ? (
                     <img
@@ -148,16 +144,17 @@ const Header = () => {
                       referrerPolicy='no-referrer'
                     />
                   ) : (
-                    <div className='flex size-7 items-center justify-center rounded-full bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400'>
+                    <div className='flex size-7 items-center justify-center rounded-full bg-green-700/10 text-green-700'>
                       <UserIcon className='size-3.5' />
                     </div>
                   )}
-                  <span className='max-w-[120px] truncate font-inter text-xs font-semibold text-neutral-700 dark:text-neutral-300'>
-                    {user.user_metadata?.full_name || user.email?.split('@')[0]}
+                  <span className='max-w-[120px] truncate font-caveat-brush text-xl font-semibold text-green-700 transition-colors duration-300 group-hover:text-orange-500'>
+                    {user.user_metadata?.full_name?.split(' ')[0] ||
+                      user.email?.split('@')[0]}
                   </span>
                   <ChevronDown
                     className={cn(
-                      'size-3.5 text-neutral-400 transition-transform duration-200',
+                      'size-3.5 text-green-700/60 transition-transform duration-200',
                       profileDropdownOpen && 'rotate-180'
                     )}
                   />
@@ -170,12 +167,16 @@ const Header = () => {
                       className='fixed inset-0 z-40'
                       onClick={() => setProfileDropdownOpen(false)}
                     />
-                    <div className='absolute top-full right-0 z-50 mt-2 w-52 origin-top-right rounded-2xl border border-neutral-200/60 bg-white/95 p-1.5 shadow-xl shadow-green-900/5 backdrop-blur-xl dark:border-[#1F2A24]/60 dark:bg-[#111714]/95'>
-                      <div className='border-b border-neutral-100 px-3 py-2 dark:border-neutral-800/80'>
-                        <p className='font-inter text-[10px] text-neutral-400 dark:text-neutral-500'>
+                    <div className='absolute top-full right-0 z-50 mt-2 w-56 origin-top-right rounded-2xl border border-green-700/15 bg-white/95 p-1.5 shadow-xl shadow-green-900/10 backdrop-blur-xl dark:border-green-900/30 dark:bg-[#0d1510]/95'>
+                      <div className='border-b border-green-700/10 px-3 py-2.5 dark:border-green-900/20'>
+                        <p className='font-inter text-[10px] font-medium tracking-wider text-green-700/50 uppercase'>
                           Signed in as
                         </p>
-                        <p className='truncate font-inter text-xs font-semibold text-neutral-700 dark:text-neutral-200'>
+                        <p className='mt-0.5 truncate font-caveat-brush text-lg text-green-700 dark:text-green-500'>
+                          {user.user_metadata?.full_name ||
+                            user.email?.split('@')[0]}
+                        </p>
+                        <p className='truncate font-inter text-[10px] text-neutral-400'>
                           {user.email}
                         </p>
                       </div>
@@ -183,15 +184,15 @@ const Header = () => {
                         <Link
                           href='/profile'
                           onClick={() => setProfileDropdownOpen(false)}
-                          className='flex items-center gap-2 rounded-xl px-3 py-2 font-inter text-xs font-semibold text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800/50'
+                          className='flex items-center gap-2.5 rounded-xl px-3 py-2 font-inter text-xs font-semibold text-green-700 transition-colors hover:bg-green-500/10 dark:text-green-400 dark:hover:bg-green-500/10'
                         >
-                          <UserIcon className='size-4 text-green-600 dark:text-green-400' />
+                          <UserIcon className='size-4 text-green-600' />
                           My Profile
                         </Link>
                         <button
                           type='button'
                           onClick={handleLogout}
-                          className='flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left font-inter text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
+                          className='flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left font-inter text-xs font-semibold text-orange-600 transition-colors hover:bg-orange-500/10'
                         >
                           <LogOut className='size-4' />
                           Sign Out
@@ -204,7 +205,7 @@ const Header = () => {
             ) : (
               <Link
                 href='/login'
-                className='flex items-center gap-1.5 rounded-full border border-green-500/20 bg-green-500/5 px-5 py-2 font-inter text-xs font-bold text-green-700 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-green-500/10 active:translate-y-0 active:scale-98 dark:border-green-500/10 dark:bg-green-500/[0.03] dark:hover:bg-green-500/[0.08]'
+                className='rounded-full border-2 border-green-800 px-5 py-1 font-caveat-brush text-2xl font-semibold text-green-800 transition-colors duration-300 hover:text-orange-500'
               >
                 Sign In
               </Link>
@@ -338,7 +339,7 @@ const Header = () => {
               ) : (
                 <Link
                   href='/login'
-                  className='flex w-full items-center justify-center rounded-xl bg-green-700 py-3 font-semibold text-white transition-colors hover:bg-green-800'
+                  className='flex w-full items-center justify-center rounded-xl bg-green-700 py-2 font-caveat-brush text-2xl font-semibold text-white transition-colors duration-300 hover:bg-orange-500'
                 >
                   Sign In
                 </Link>
