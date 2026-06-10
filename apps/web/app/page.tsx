@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import MapLoader from '@/loaders/map-loader';
 import { AddEventDialog } from '@/components/core/add-event-dialog';
@@ -13,6 +14,7 @@ import SidebarToggle from '@/components/events/sidebar-toggle';
 import Sidebar from '@/components/events/sidebar';
 import { CATEGORY_DETAILS, CategoryStyle } from '@innuentha/shared';
 import { useUserLocation } from '@/hooks/use-user-location';
+import { useAuth } from '@/components/auth-provider';
 
 const KeralaMap = dynamic(() => import('@innuentha/map/kerala-map'), {
   ssr: false,
@@ -21,6 +23,7 @@ const KeralaMap = dynamic(() => import('@innuentha/map/kerala-map'), {
 
 export default function Page() {
   const userLocation = useUserLocation();
+  const { user } = useAuth();
 
   const { data, isLoading } = useQuery({
     queryKey: ['events'],
@@ -113,11 +116,20 @@ export default function Page() {
 
       {/* Floating Add Event Button (Mobile) */}
       <div className='absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 md:hidden'>
-        <AddEventDialog>
-          <button className='flex cursor-pointer items-center gap-1.5 rounded-full bg-[oklch(52.7%_0.154_150.069)] px-5 py-3 font-inter text-xs font-bold text-white shadow-xl transition-all active:scale-95'>
+        {user ? (
+          <Link
+            href='/add-events'
+            className='flex cursor-pointer items-center gap-1.5 rounded-full bg-[oklch(52.7%_0.154_150.069)] px-5 py-3 font-inter text-xs font-bold text-white shadow-xl transition-all active:scale-95'
+          >
             <Plus className='size-4' /> Add Event
-          </button>
-        </AddEventDialog>
+          </Link>
+        ) : (
+          <AddEventDialog>
+            <button className='flex cursor-pointer items-center gap-1.5 rounded-full bg-[oklch(52.7%_0.154_150.069)] px-5 py-3 font-inter text-xs font-bold text-white shadow-xl transition-all active:scale-95'>
+              <Plus className='size-4' /> Add Event
+            </button>
+          </AddEventDialog>
+        )}
       </div>
 
       <EventDetailDialog

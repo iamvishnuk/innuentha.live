@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AddEventDialog } from '@/components/core/add-event-dialog';
+import { useAuth } from '@/components/auth-provider';
 import { createClient } from '@innuentha/supabase/client';
-import { User } from '@supabase/supabase-js';
 import { User as UserIcon, LogOut, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -23,35 +23,9 @@ const Header = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading } = useAuth();
 
-  useEffect(() => {
-    const supabase = createClient();
-
-    // Fetch initial user
-    supabase.auth
-      .getUser()
-      .then(({ data: { user } }) => {
-        setUser(user);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-
-    // Listen for auth state updates reactively
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  console.log(user);
 
   const handleLogout = async () => {
     try {
@@ -116,11 +90,20 @@ const Header = () => {
                 </li>
               ))}
               <li key='Add Events'>
-                <AddEventDialog>
-                  <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+                {user ? (
+                  <Link
+                    href='/add-events'
+                    className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'
+                  >
                     Add Events
-                  </button>
-                </AddEventDialog>
+                  </Link>
+                ) : (
+                  <AddEventDialog>
+                    <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+                      Add Events
+                    </button>
+                  </AddEventDialog>
+                )}
               </li>
             </ul>
           </nav>
@@ -136,18 +119,9 @@ const Header = () => {
                   onClick={() => setProfileDropdownOpen((prev) => !prev)}
                   className='group flex cursor-pointer items-center gap-2 rounded-full border-2 border-green-700/20 bg-green-500/5 px-2 py-1.5 transition-all duration-300 hover:border-green-700/40 hover:bg-green-500/10 active:scale-95'
                 >
-                  {user.user_metadata?.avatar_url ? (
-                    <img
-                      src={user.user_metadata.avatar_url}
-                      alt={user.user_metadata.full_name || 'User'}
-                      className='size-7 rounded-full object-cover'
-                      referrerPolicy='no-referrer'
-                    />
-                  ) : (
-                    <div className='flex size-7 items-center justify-center rounded-full bg-green-700/10 text-green-700'>
-                      <UserIcon className='size-3.5' />
-                    </div>
-                  )}
+                  <div className='flex size-7 items-center justify-center rounded-full bg-green-700/10 text-green-700'>
+                    <UserIcon className='size-3.5' />
+                  </div>
                   <span className='max-w-[120px] truncate font-caveat-brush text-xl font-semibold text-green-700 transition-colors duration-300 group-hover:text-orange-500'>
                     {user.user_metadata?.full_name?.split(' ')[0] ||
                       user.email?.split('@')[0]}
@@ -282,11 +256,20 @@ const Header = () => {
               </li>
             ))}
             <li key='Add Events'>
-              <AddEventDialog>
-                <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+              {user ? (
+                <Link
+                  href='/add-events'
+                  className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'
+                >
                   Add Events
-                </button>
-              </AddEventDialog>
+                </Link>
+              ) : (
+                <AddEventDialog>
+                  <button className='cursor-pointer text-green-700 transition-colors duration-300 hover:text-orange-500'>
+                    Add Events
+                  </button>
+                </AddEventDialog>
+              )}
             </li>
 
             {/* Mobile User Section */}
@@ -296,18 +279,9 @@ const Header = () => {
               ) : user ? (
                 <div className='space-y-4'>
                   <div className='flex items-center gap-3'>
-                    {user.user_metadata?.avatar_url ? (
-                      <img
-                        src={user.user_metadata.avatar_url}
-                        alt={user.user_metadata.full_name || 'User'}
-                        className='size-9 rounded-full object-cover'
-                        referrerPolicy='no-referrer'
-                      />
-                    ) : (
-                      <div className='flex size-9 items-center justify-center rounded-full bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400'>
-                        <UserIcon className='size-4.5' />
-                      </div>
-                    )}
+                    <div className='flex size-9 items-center justify-center rounded-full bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400'>
+                      <UserIcon className='size-4.5' />
+                    </div>
                     <div className='flex flex-col truncate'>
                       <span className='text-neutral-850 truncate font-semibold dark:text-neutral-200'>
                         {user.user_metadata?.full_name ||
