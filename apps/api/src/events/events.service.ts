@@ -1,4 +1,4 @@
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, lt, isNull } from 'drizzle-orm';
 import { db } from '@innuentha/supabase/db';
 import { events } from '@innuentha/supabase/schema';
 import { getPosterUrl, uploadToR2 } from '../utils/r2';
@@ -25,7 +25,11 @@ export async function createEvent(
   file: Express.Multer.File,
   userId: string | null
 ) {
-  const posterKey = await uploadToR2(file.buffer, file.originalname, file.mimetype);
+  const posterKey = await uploadToR2(
+    file.buffer,
+    file.originalname,
+    file.mimetype
+  );
 
   const [event] = await db
     .insert(events)
@@ -60,7 +64,7 @@ export async function getEvents(filters: GetEventsFilter) {
 
   const results = await query.orderBy(asc(events.startDate));
 
-  return results.map(e => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
+  return results.map((e) => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
 }
 
 /**
@@ -74,5 +78,35 @@ export async function getUserEvents(userId: string) {
     .where(eq(events.userId, userId))
     .orderBy(asc(events.startDate));
 
-  return results.map(e => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
+  return results.map((e) => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
+}
+
+/**
+ * Hard-deletes all expired events created anonymously (userId IS NULL).
+ *
+ * An event is considered expired when its endDate is strictly before today.
+ * Returns the number of deleted rows and their R2 poster keys so the
+ * caller can clean up the associated media from Cloudflare R2.
+ */
+export async function deleteExpiredAnonymousEvents(): Promise<{
+  deletedCount: number;
+  posterKeys: string[];
+}> {
+  // Use YYYY-MM-DD string comparison — matches the `date` column type in Postgres
+  const today = new Date().toISOString().split('T')[0]!;
+
+  const deleted = await db
+    .delete(events)
+    .where(
+      and(
+        isNull(events.userId), // anonymous submissions only
+        lt(events.endDate, today) // event has already ended
+      )
+    )
+    .returning({ posterUrl: events.posterUrl });
+
+  return {
+    deletedCount: deleted.length,
+    posterKeys: deleted.map((e) => e.posterUrl)
+  };
 }

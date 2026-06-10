@@ -1,3 +1,4 @@
+import { Cron } from 'croner';
 import { eq, and, lt } from 'drizzle-orm';
 import { db } from '@innuentha/supabase/db';
 import { events } from '@innuentha/supabase/schema';
@@ -7,53 +8,49 @@ import { DuplicateDetector } from './duplicate-detector';
 const detector = new DuplicateDetector();
 
 export class EventWorker {
-  private timeout: ReturnType<typeof setTimeout> | null = null;
-  private consecutiveFailures = 0;
-  private running = false;
+  private job: Cron | null = null;
 
   constructor(
-    /** How often to poll when healthy (ms) */
-    private readonly pollIntervalMs = 30_000,
+    /**
+     * Standard 5-field cron expression.
+     * Default: every 30 seconds — '*\/30 * * * * *' (6-field for sub-minute support via croner).
+     */
+    private readonly cronExpression = '*/30 * * * * *',
     /** Min age of a pending event before processing — gives the HTTP response time to finish */
-    private readonly processingDelayMs = 5_000,
-    /** Maximum backoff cap — 2^n * pollInterval, capped here */
-    private readonly maxBackoffMs = 8 * 60 * 1000 // 8 minutes
+    private readonly processingDelayMs = 5_000
   ) {}
 
   start() {
-    this.running = true;
-    logger.info(`[EventWorker] Started — base poll interval ${this.pollIntervalMs / 1000}s`);
-    this.scheduleNext(0); // run immediately on startup
+    this.job = new Cron(
+      this.cronExpression,
+      {
+        /**
+         * protect: true — prevents overlapping runs.
+         * If the poll is still running when the next tick fires,
+         * the new tick is silently skipped.
+         */
+        protect: true,
+
+        /**
+         * catch: true — croner catches unhandled errors internally.
+         * We also wrap the body in try/catch for structured logging.
+         */
+        catch: (err: unknown) => {
+          logger.error('[EventWorker] Unhandled cron error', err);
+        },
+      },
+      () => this.poll()
+    );
+
+    logger.info(
+      `[EventWorker] Started — cron: "${this.cronExpression}", processing delay: ${this.processingDelayMs / 1000}s`
+    );
   }
 
   stop() {
-    this.running = false;
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = null;
-    }
+    this.job?.stop();
+    this.job = null;
     logger.info('[EventWorker] Stopped');
-  }
-
-  private scheduleNext(delayMs: number) {
-    if (!this.running) return;
-    this.timeout = setTimeout(() => this.run(), delayMs);
-  }
-
-  private async run() {
-    if (!this.running) return;
-    await this.poll();
-
-    // Exponential backoff on consecutive DB failures; reset to base interval on success
-    const nextDelay = this.consecutiveFailures > 0
-      ? Math.min(this.pollIntervalMs * Math.pow(2, this.consecutiveFailures), this.maxBackoffMs)
-      : this.pollIntervalMs;
-
-    if (this.consecutiveFailures > 0) {
-      logger.warn(`[EventWorker] Backing off — next poll in ${nextDelay / 1000}s (failure #${this.consecutiveFailures})`);
-    }
-
-    this.scheduleNext(nextDelay);
   }
 
   private async poll() {
@@ -71,11 +68,7 @@ export class EventWorker {
           )
         )
         .orderBy(events.createdAt);
-
-      // Successful DB read — reset failure counter
-      this.consecutiveFailures = 0;
     } catch (err) {
-      this.consecutiveFailures++;
       logger.error('[EventWorker] Failed to fetch pending events', err);
       return;
     }

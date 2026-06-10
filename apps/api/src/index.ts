@@ -3,6 +3,7 @@ import app from "./app";
 import { logger } from "./utils/logger";
 import { db } from "@innuentha/supabase/db";
 import { EventWorker } from "./worker/events.worker";
+import { CleanupWorker } from "./worker/cleanup.worker";
 import * as Sentry from "@sentry/node";
 
 if (env.SENTRY_DSN) {
@@ -20,10 +21,12 @@ if (db) {
 }
 
 const worker = new EventWorker();
+const cleanupWorker = new CleanupWorker();
 
 const server = app.listen(env.PORT, () => {
   logger.info(`🚀 Server running on port ${env.PORT} in ${env.NODE_ENV} mode`);
   worker.start();
+  cleanupWorker.start();
 });
 
 // Graceful Shutdown handling
@@ -31,6 +34,7 @@ const shutdown = (signal: string) => {
   logger.info(`Received ${signal}. Starting graceful shutdown...`);
 
   worker.stop();
+  cleanupWorker.stop();
 
   server.close(() => {
     logger.info("HTTP server closed. Exiting process.");

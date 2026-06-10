@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { env } from '../config/env';
 import { randomUUID } from 'crypto';
 import path from 'path';
@@ -54,4 +54,18 @@ export async function uploadToR2(
   );
 
   return key;
+}
+
+/**
+ * Deletes a single object from Cloudflare R2 by its object key.
+ *
+ * @param key - R2 object key (e.g. 'event-posters/<uuid>.jpg')
+ */
+export async function deleteFromR2(key: string): Promise<void> {
+  await r2Client.send(
+    new DeleteObjectCommand({
+      Bucket: env.CLOUDFLARE_R2_BUCKET_NAME,
+      Key: key,
+    })
+  );
 }
