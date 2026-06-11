@@ -25,8 +25,6 @@ const Header = () => {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const { user, isLoading } = useAuth();
 
-  console.log(user);
-
   const handleLogout = async () => {
     try {
       const supabase = createClient();

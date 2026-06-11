@@ -1,15 +1,14 @@
-import { TEvent } from '@innuentha/supabase/schema';
 import { List } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 
 type SidebarToggleProps = {
-  events: TEvent[];
+  count: number;
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const SidebarToggle = ({
-  events,
+  count,
   isSidebarOpen,
   setIsSidebarOpen
 }: SidebarToggleProps) => {
@@ -23,7 +22,7 @@ const SidebarToggle = ({
       <List className='size-4 text-green-600 dark:text-green-400' />
       Show Events List
       <span className='flex size-5 items-center justify-center rounded-full bg-green-500/10 text-[10px] font-black text-green-700 dark:bg-green-500/20 dark:text-green-400'>
-        {events.length}
+        {count}
       </span>
     </button>
   );

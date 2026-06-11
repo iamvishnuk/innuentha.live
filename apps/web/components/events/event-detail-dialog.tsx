@@ -1,5 +1,5 @@
+import { TEventWithUser } from '@/lib/types';
 import { formatDateRange } from '@/lib/utils';
-import { TEvent } from '@innuentha/supabase/schema';
 import { Button } from '@innuentha/ui/components/button';
 import {
   Dialog,
@@ -20,7 +20,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { toast } from 'sonner';
 
 type EventDetailDialogProps = {
-  event: TEvent | null;
+  event: TEventWithUser | null;
   selectedCatStyle: {
     emoji: string;
     label: string;
@@ -28,7 +28,7 @@ type EventDetailDialogProps = {
     bg: string;
     text: string;
   };
-  setSelectedEvent: Dispatch<SetStateAction<TEvent | null>>;
+  setSelectedEvent: Dispatch<SetStateAction<TEventWithUser | null>>;
 };
 
 const EventDetailDialog = ({
@@ -36,7 +36,7 @@ const EventDetailDialog = ({
   selectedCatStyle,
   setSelectedEvent
 }: EventDetailDialogProps) => {
-  const handleShareEvent = (event: TEvent) => {
+  const handleShareEvent = (event: TEventWithUser) => {
     const text = `Check out "${event.eventName}" on Innuentha.live! Happening at ${event.place}, ${event.district} from ${formatDateRange(event.startDate, event.endDate)}. View on map: https://www.google.com/maps/search/?api=1&query=${event.latitude},${event.longitude}`;
     navigator.clipboard.writeText(text);
     toast.success('Event details copied to clipboard!');
@@ -151,6 +151,34 @@ const EventDetailDialog = ({
                   </a>
                 )}
               </div>
+
+              {/* Posted by user */}
+              {event.user && (
+                <div className='flex items-center gap-3 rounded-2xl border border-neutral-200/50 bg-neutral-50/50 px-4 py-3 dark:border-neutral-800/40 dark:bg-neutral-900/30'>
+                  <div className='relative shrink-0'>
+                    {event.user.avatarUrl ? (
+                      <img
+                        src={event.user.avatarUrl}
+                        alt={event.user.fullName ?? 'User avatar'}
+                        className='size-9 rounded-full object-cover ring-2 ring-green-500/30'
+                      />
+                    ) : (
+                      <div className='flex size-9 items-center justify-center rounded-full bg-neutral-200 ring-2 ring-green-500/30 dark:bg-neutral-800'>
+                        <User className='size-4 text-neutral-500 dark:text-neutral-400' />
+                      </div>
+                    )}
+                    <span className='absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2 border-white bg-green-500 dark:border-[#111714]' />
+                  </div>
+                  <div className='flex flex-col gap-0.5'>
+                    <span className='text-[10px] font-bold tracking-wider text-neutral-400 uppercase dark:text-neutral-500'>
+                      Posted by
+                    </span>
+                    <span className='text-xs font-semibold text-neutral-700 dark:text-neutral-200'>
+                      {event.user.fullName ?? 'Anonymous'}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Event Description */}
               <div className='space-y-1.5'>

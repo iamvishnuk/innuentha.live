@@ -1,6 +1,6 @@
-import { and, asc, eq, lt, isNull } from 'drizzle-orm';
+import { and, asc, eq, lt, isNull, getTableColumns } from 'drizzle-orm';
 import { db } from '@innuentha/supabase/db';
-import { events } from '@innuentha/supabase/schema';
+import { events, profiles } from '@innuentha/supabase/schema';
 import { getPosterUrl, uploadToR2 } from '../utils/r2';
 import type { TAddEventSchema } from '@innuentha/shared';
 
@@ -45,7 +45,6 @@ export async function createEvent(
  * Enriches poster keys into full public CDN URLs.
  */
 export async function getEvents(filters: GetEventsFilter) {
-  let query = db.select().from(events);
   const conditions = [];
 
   if (filters.status !== 'all') {
@@ -58,11 +57,18 @@ export async function getEvents(filters: GetEventsFilter) {
     conditions.push(eq(events.district, filters.district));
   }
 
-  if (conditions.length > 0) {
-    query = query.where(and(...conditions)) as typeof query;
-  }
-
-  const results = await query.orderBy(asc(events.startDate));
+  const results = await db
+    .select({
+      ...getTableColumns(events),
+      user: {
+        fullName: profiles.fullName,
+        avatarUrl: profiles.avatarUrl
+      }
+    })
+    .from(events)
+    .leftJoin(profiles, eq(events.userId, profiles.id))
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .orderBy(asc(events.startDate));
 
   return results.map((e) => ({ ...e, posterUrl: getPosterUrl(e.posterUrl) }));
 }

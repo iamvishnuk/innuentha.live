@@ -18,7 +18,6 @@ import {
   FieldLabel
 } from '@innuentha/ui/components/field';
 import { Input } from '@innuentha/ui/components/input';
-import { Textarea } from '@innuentha/ui/components/textarea';
 import {
   Select,
   SelectContent,
@@ -33,6 +32,9 @@ import MapPickerLoader from '@/loaders/map-picker-loader';
 import { useMutation } from '@tanstack/react-query';
 import { addEventMutationFn } from '@/lib/api';
 
+const TextEditor = dynamic(() => import('@/components/text-editor'), {
+  ssr: false
+});
 const MapPicker = dynamic(() => import('@innuentha/map/map-picker'), {
   ssr: false,
   loading: () => <MapPickerLoader />
@@ -171,11 +173,10 @@ const AddEventsPage = () => {
                       <FieldLabel className='font-semibold text-green-700'>
                         Description <span className='text-red-500'>*</span>
                       </FieldLabel>
-                      <Textarea
-                        {...field}
-                        aria-invalid={fieldState.invalid}
+                      <TextEditor
+                        value={field.value}
+                        onChange={field.onChange}
                         placeholder='Describe the event...'
-                        rows={4}
                         className='min-h-24'
                       />
                       {fieldState.invalid && (

@@ -8,13 +8,13 @@ import MapLoader from '@/loaders/map-loader';
 import { AddEventDialog } from '@/components/core/add-event-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { getEventsQueryFn } from '@/lib/api';
-import { TEvent } from '@innuentha/supabase/schema';
 import EventDetailDialog from '@/components/events/event-detail-dialog';
 import SidebarToggle from '@/components/events/sidebar-toggle';
 import Sidebar from '@/components/events/sidebar';
 import { CATEGORY_DETAILS, CategoryStyle } from '@innuentha/shared';
 import { useUserLocation } from '@/hooks/use-user-location';
 import { useAuth } from '@/components/auth-provider';
+import { TEventWithUser } from '@/lib/types';
 
 const KeralaMap = dynamic(() => import('@innuentha/map/kerala-map'), {
   ssr: false,
@@ -32,7 +32,9 @@ export default function Page() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [selectedEvent, setSelectedEvent] = useState<TEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<TEventWithUser | null>(
+    null
+  );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [flyToEventId, setFlyToEventId] = useState<string | null>(null);
 
@@ -48,12 +50,12 @@ export default function Page() {
 
   // Show only approved events on the interactive map
   const approvedEvents = useMemo(() => {
-    return rawEventsList.filter((e: TEvent) => e.status === 'approved');
+    return rawEventsList.filter((e: TEventWithUser) => e.status === 'approved');
   }, [rawEventsList]);
 
   // Filter events based on search query and category filters
   const filteredEvents = useMemo(() => {
-    return approvedEvents.filter((event: TEvent) => {
+    return approvedEvents.filter((event: TEventWithUser) => {
       const matchesCategory =
         selectedCategory === 'ALL' || event.category === selectedCategory;
 
@@ -77,7 +79,7 @@ export default function Page() {
     }
   }, [flyToEventId]);
 
-  const handleSelectEventFromList = (event: TEvent) => {
+  const handleSelectEventFromList = (event: TEventWithUser) => {
     setFlyToEventId(event.id);
     // On mobile, collapse the drawer so the user sees the map popup fly animation clearly
     if (window.innerWidth < 768) {
@@ -97,7 +99,7 @@ export default function Page() {
 
       {/* Floating Toggle Sidebar Button (When Sidebar is Closed) */}
       <SidebarToggle
-        events={filteredEvents}
+        count={filteredEvents.length}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
